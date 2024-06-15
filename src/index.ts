@@ -2,7 +2,6 @@ import express, { NextFunction, Request, Response } from "express";
 import membersRouter from "./routers/members/members-routers";
 import booksRouter from "./routers/books/books-routers";
 import swaggerUi from "swagger-ui-express";
-import swaggerjsdoc from "swagger-jsdoc"
 import { swaggerSpec } from "./utils/swaggerDefinition";
 
 const PORT = 8000;

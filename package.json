@@ -8,7 +8,7 @@
     "prebuild": "npm run swagger",
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
-    "dev": "nodemon tsoa spec src/index.ts",
+    "dev": "nodemon src/index.ts",
     "swagger": "tsoa spec",
     "npx": "npx"
   },
