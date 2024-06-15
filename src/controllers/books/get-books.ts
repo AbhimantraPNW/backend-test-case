@@ -34,7 +34,7 @@ import db from "../../config/db";
  *                         example: "HP1"
  *                       stock:
  *                         type: integer
- *                         example: 5
+ *                         example: 1
  *       500:
  *         description: Internal server error
  */
