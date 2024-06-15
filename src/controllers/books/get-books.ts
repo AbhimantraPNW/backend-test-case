@@ -31,7 +31,7 @@ import db from "../../config/db";
  *                         example: "Harry Potter and the Sorcerer's Stone"
  *                       code:
  *                         type: string
- *                         example: "HP1"
+ *                         example: "JK-45"
  *                       stock:
  *                         type: integer
  *                         example: 1
