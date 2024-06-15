@@ -3,6 +3,65 @@ import db from "../../config/db";
 import { BorrowingDetail } from "../books/types";
 import { Member } from "./types";
 
+/**
+ * @swagger
+ * /members/return:
+ *   post:
+ *     summary: Return a borrowed book for a member
+ *     tags: [Members]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               memberId:
+ *                 type: integer
+ *                 example: 1
+ *               bookId:
+ *                 type: integer
+ *                 example: 5
+ *               returnDate:
+ *                 type: string
+ *                 format: date
+ *                 example: "2024-06-15"
+ *     responses:
+ *       200:
+ *         description: Book returned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: If book return more 7 days
+ *                 penaltyApplied:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: Bad request (e.g., no active borrowing found, invalid memberId or bookId)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No active borrowing found for this member and book
+ *       404:
+ *         description: Not found (e.g., member or book not found)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Member or book not found
+ */
+
 export const returnBook = async (
   req: Request,
   res: Response,
@@ -43,16 +102,16 @@ export const returnBook = async (
       penaltyApplied = true;
       // Get current penalty end date
       const memberQuery = "SELECT penalty_end_date FROM members WHERE id = ?";
-      const [memberRows] = await db.query<Member[]>(memberQuery, [memberId])
+      const [memberRows] = await db.query<Member[]>(memberQuery, [memberId]);
 
       let penaltyEndDate: Date;
       if (memberRows.length > 0 && memberRows[0].penalty_end_date) {
-        penaltyEndDate = new Date(memberRows[0].penalty_end_date)
+        penaltyEndDate = new Date(memberRows[0].penalty_end_date);
       } else {
-        penaltyEndDate = new Date(return_date)
+        penaltyEndDate = new Date(return_date);
       }
 
-      //Extend penalty end date
+      // Extend penalty end date
       penaltyEndDate.setDate(penaltyEndDate.getDate() + 3);
 
       const updateMemberQuery =
@@ -77,7 +136,7 @@ export const returnBook = async (
       "UPDATE members SET borrowed_books = borrowed_books - 1 WHERE id = ?";
     await db.query(updateMemberQuery, [memberId]);
 
-    res.send({ message: "Book returned success", penaltyApplied });
+    res.send({ message: "Book returned successfully", penaltyApplied });
   } catch (error) {
     next(error);
   }
